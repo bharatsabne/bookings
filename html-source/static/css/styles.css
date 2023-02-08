@@ -1,0 +1,30 @@
+.carousel-inner {
+    height: 90vh;
+}
+
+.my-footer {
+    height: 5em;
+    color: #ffffff;
+    background-color: #003c52;
+    margin-top: 2em;
+    padding: 1em;
+    font-size: 80%;
+}
+
+.local {
+    margin-top: 5em;
+}
+
+.roomImg {
+    max-width: 50%;
+}
+
+/* After notie styles are applied to DOM:
+.notie-container {
+    z-index: 10000;
+} */
+
+.datepicker {
+    position: fixed;
+    z-index: 999999999;
+}
