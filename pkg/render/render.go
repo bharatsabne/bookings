@@ -9,6 +9,7 @@ import (
 
 	"github.com/bharatsabne/bookings/pkg/config"
 	"github.com/bharatsabne/bookings/pkg/models"
+	"github.com/justinas/nosurf"
 )
 
 var app *config.AppConfig
@@ -17,12 +18,13 @@ var app *config.AppConfig
 func NewTemplates(a *config.AppConfig) {
 	app = a
 }
-func AddDefaultData(td *models.TempateData) *models.TempateData {
+func AddDefaultData(td *models.TempateData, r *http.Request) *models.TempateData {
+	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
 // RenderTemplate Renders the template
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TempateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TempateData) {
 	//get themplate cache from app.config
 
 	//create template cache
@@ -44,7 +46,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TempateData) 
 	}
 
 	buf := new(bytes.Buffer)
-	td = AddDefaultData(td)
+	td = AddDefaultData(td, r)
 	err := t.Execute(buf, td)
 	if err != nil {
 		log.Println(err)

@@ -25,6 +25,6 @@
 } */
 
 .datepicker {
-    position: fixed;
-    z-index: 999999999;
+    /* position: static; */
+    margin: 10 auto;
 }

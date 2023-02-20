@@ -1,0 +1,53 @@
+{{template "base" .}}
+{{define "title"}}About Page{{end}}
+{{define "content"}}
+<div class="container local">
+    <div class="row">
+        <div class="col">
+            <img src="/static/Images/marjors-suite.png" class="img-fluid img-thumbnail mx-auto d-block roomImg"
+                alt="Room Photo">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center mt-4">Marjors Suite</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <a href="#" id="check-availability-button" class="btn btn-success">Check Availablity</a>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "js"}}
+<script>
+    document.getElementById("check-availability-button").addEventListener("click", function ()
+    {
+        let html = `<form id="checkAvalabilityForm" action="" method="post" novalidate class="needs-validation">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-row" id="reservations-dates-model">
+                                <div class="col">
+                                    <input disabled required class="form-control" type="text" name="start" id="start"
+                                        placeholder="Arrival" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input disabled required class="form-control" type="text" name="end" id="end"
+                                        placeholder="Departure" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>`;
+        attensation.Custom({ msg: html, title: "Choose your Dates" });
+    })
+</script>
+{{end}}

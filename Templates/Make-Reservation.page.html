@@ -1,0 +1,44 @@
+{{template "base" .}}
+{{define "title"}}Home Page{{end}}
+{{define "content"}}
+<div class="container local">
+    <div class="row">
+        <div class="col">
+            <h1>Make Reservation</h1>
+            <div class="row">
+                <div class="col">
+                    <strong>Reservation Details</strong>
+                </div>
+            </div>
+            <div class="row">
+                <form action="#" method="get" novalidate class="needs-validation">
+                    <div class="form-row" id="make-reservation">
+                        <div class="col">
+                            <label for="FirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="FirstName" name="FirstName"
+                                aria-describedby="First Name" placeholder="First Name" autocomplete="off" required>
+                        </div>
+                        <div class="col">
+                            <label for="LastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="LastName" name="LastName"
+                                aria-describedby="Last Name" placeholder="Last Name" autocomplete="off" required>
+                        </div>
+                        <div class="col">
+                            <label for="Email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="Email" name="Email" aria-describedby="Email"
+                                placeholder="Email" autocomplete="off" required>
+                        </div>
+                        <div class="col">
+                            <label for="Phone" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="Phone" name="Phone" aria-describedby="Phone"
+                                placeholder="Phone" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Make Reservation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

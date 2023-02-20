@@ -2,7 +2,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 
@@ -40,7 +42,7 @@ func (m *Repositoy) Home(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("IP Address: " + ip)
 	m.App.Session.Put(r.Context(), "remote_ip", ip)
-	render.RenderTemplate(w, "Home.page.html", &models.TempateData{})
+	render.RenderTemplate(w, r, "Home.page.html", &models.TempateData{})
 }
 
 // About Page handler
@@ -49,7 +51,58 @@ func (m *Repositoy) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["test"] = "Hi, There"
 	lol := m.App.Session.GetString(r.Context(), "remote_ip")
 	stringMap["remote_ip"] = lol
-	render.RenderTemplate(w, "About.page.html", &models.TempateData{
+	render.RenderTemplate(w, r, "About.page.html", &models.TempateData{
 		StringMap: stringMap,
 	})
+}
+
+// Contact
+func (m *Repositoy) Contact(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "Contact.page.html", &models.TempateData{})
+}
+
+// Reservation
+func (m *Repositoy) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{})
+}
+
+// Generals
+func (m *Repositoy) Generals(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "Generals.page.html", &models.TempateData{})
+}
+
+// Marjors
+func (m *Repositoy) Marjors(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "Majors.page.html", &models.TempateData{})
+}
+
+// SearchAvailability
+func (m *Repositoy) SearchAvailability(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "Search-Availability.page.html", &models.TempateData{})
+}
+
+// POST SearchAvailability
+func (m *Repositoy) PostSearchAvailability(w http.ResponseWriter, r *http.Request) {
+	start := r.Form.Get("start_date")
+	end := r.Form.Get("end_date")
+	w.Write([]byte(fmt.Sprintf("Start Date is %s and End Date is %s", start, end)))
+}
+
+type jsonResponse struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// AvailabilityJSON handles requests for avalibility and send JSON Response
+func (m *Repositoy) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
+	rest := jsonResponse{
+		OK:      false,
+		Message: "Not Avalible",
+	}
+	out, err := json.MarshalIndent(rest, "", "     ")
+	if err != nil {
+		log.Println(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 }

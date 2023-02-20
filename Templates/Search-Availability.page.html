@@ -1,0 +1,44 @@
+{{template "base" .}}
+{{define "title"}}About Page{{end}}
+{{define "content"}}
+<div class="container local">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1 class="mt-5">Search for Avaialblity</h1>
+            <form action="/search-availability" method="post" novalidate class="needs-validation">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="form-row" id="reservation-dates">
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Starting Date</label>
+                            <input type="text" class="form-control" id="start_date" name="start_date"
+                                aria-describedby="Start Date" placeholder="Arriavl Date" autocomplete="off" required>
+                            <div id="startDateHep" class="form-text">Enter your starting date in form of YYYY-MM-DD.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <label for="end_date" class="form-label">Ending Date</label>
+                            <input type="text" class="form-control" id="end_date" name="end_date"
+                                aria-describedby="End Date" placeholder="Diparture Date" autocomplete="off" required>
+                            <div id="endDateHep" class="form-text">Enter your starting date in form of YYYY-MM-DD.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Search Avalability</button>
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+{{define "js"}}
+<script>
+    const elem = document.getElementById('reservation-dates');
+    const rangepicker = new DateRangePicker(elem, {
+        format: "yyyy-mm-dd",
+    });
+</script>
+{{end}}

@@ -39,7 +39,7 @@ func main() {
 		log.Fatal("Unable to load Template Cahce")
 	}
 	app.TemplateCache = tc
-	app.Usedcache = true
+	app.Usedcache = false
 
 	render.NewTemplates(&app)
 
