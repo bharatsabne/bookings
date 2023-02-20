@@ -8,9 +8,9 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/bharatsabne/bookings/pkg/config"
-	"github.com/bharatsabne/bookings/pkg/models"
-	"github.com/bharatsabne/bookings/pkg/render"
+	"github.com/bharatsabne/bookings/Internal/config"
+	"github.com/bharatsabne/bookings/Internal/models"
+	"github.com/bharatsabne/bookings/Internal/render"
 )
 
 // Repo will be used by handlers

@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/bharatsabne/bookings/pkg/config"
-	handler "github.com/bharatsabne/bookings/pkg/handlers"
-	"github.com/bharatsabne/bookings/pkg/render"
+	"github.com/bharatsabne/bookings/Internal/config"
+	handler "github.com/bharatsabne/bookings/Internal/handlers"
+	"github.com/bharatsabne/bookings/Internal/render"
 )
 
 // pontNumber is constant

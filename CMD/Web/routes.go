@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/bharatsabne/bookings/pkg/config"
-	handler "github.com/bharatsabne/bookings/pkg/handlers"
+	"github.com/bharatsabne/bookings/Internal/config"
+	handler "github.com/bharatsabne/bookings/Internal/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
