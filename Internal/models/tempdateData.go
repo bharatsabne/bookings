@@ -1,5 +1,7 @@
 package models
 
+import "github.com/bharatsabne/bookings/Internal/forms"
+
 // TempateData holds data send fromhandlers to templates
 type TempateData struct {
 	StringMap map[string]string
@@ -10,4 +12,5 @@ type TempateData struct {
 	Flash     string
 	Warning   string
 	Error     string
+	Forms     *forms.Form
 }

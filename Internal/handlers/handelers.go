@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/bharatsabne/bookings/Internal/config"
+	"github.com/bharatsabne/bookings/Internal/forms"
 	"github.com/bharatsabne/bookings/Internal/models"
 	"github.com/bharatsabne/bookings/Internal/render"
 )
@@ -63,7 +64,46 @@ func (m *Repositoy) Contact(w http.ResponseWriter, r *http.Request) {
 
 // Reservation
 func (m *Repositoy) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{})
+	var emptyReservation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
+	render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{
+		Forms: forms.New(nil),
+		Data:  data,
+	})
+}
+
+// Post Reservation hanldes the posting of reservation form
+func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		log.Printf("%s", err.Error())
+		return
+	}
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("FirstName"),
+		LastName:  r.Form.Get("LastName"),
+		Email:     r.Form.Get("Email"),
+		Phone:     r.Form.Get("Phone"),
+	}
+
+	form := forms.New(r.PostForm)
+	// form.Has("FirstName", r)
+	form.Required("FirstName", "LastName", "Email")
+	form.MinimumLength("FirstName", 3, r)
+	form.MinimumLength("LastName", 3, r)
+	form.IsEmail("Email")
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+		render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{
+			Forms: form,
+			Data:  data,
+		})
+	} else {
+		return
+	}
 }
 
 // Generals
