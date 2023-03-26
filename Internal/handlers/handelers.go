@@ -146,3 +146,7 @@ func (m *Repositoy) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
 }
+
+func (m *Repositoy) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+
+}
