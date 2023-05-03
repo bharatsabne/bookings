@@ -14,11 +14,18 @@ import (
 
 var app *config.AppConfig
 
+var pathToTemplate = "./Templates"
+
+var functions = template.FuncMap{}
+
 // NewTemplates Set the config for the template package
 func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 func AddDefaultData(td *models.TempateData, r *http.Request) *models.TempateData {
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
@@ -62,25 +69,25 @@ func CreateTempateCache() (map[string]*template.Template, error) {
 	myChach := map[string]*template.Template{}
 
 	//get all templates from ./Template folder which are *.page.html
-	pages, err := filepath.Glob("./Templates/*.page.html")
+	pages, err := filepath.Glob(pathToTemplate + "/*.page.html")
 	if err != nil {
 		return myChach, err
 	}
 	//range through all files
 	for _, page := range pages {
 		name := filepath.Base(page)
-		ts, err := template.New(name).ParseFiles(page)
+		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
 			return myChach, err
 		}
 
-		matches, err := filepath.Glob("./Templates/*.layout.html")
+		matches, err := filepath.Glob(pathToTemplate + "/*.layout.html")
 		if err != nil {
 			return myChach, err
 		}
 
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./Templates/*.layout.html")
+			ts, err = ts.ParseGlob(pathToTemplate + "/*.layout.html")
 			if err != nil {
 				return myChach, err
 			}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/bharatsabne/bookings/Internal/config"
 	handler "github.com/bharatsabne/bookings/Internal/handlers"
+	"github.com/bharatsabne/bookings/Internal/models"
 	"github.com/bharatsabne/bookings/Internal/render"
 )
 
@@ -17,36 +19,16 @@ const pontNumber = ":8080"
 
 var app config.AppConfig
 
-var sesson *scs.SessionManager
+var session *scs.SessionManager
 
 // main function
 func main() {
 
-	//for deply in production set to true
-	app.InProduction = false
+	err := run()
 
-	sesson = scs.New()
-	sesson.Lifetime = 24 * time.Hour
-	sesson.Cookie.Persist = true
-	sesson.Cookie.SameSite = http.SameSiteLaxMode
-	sesson.Cookie.Secure = app.InProduction
-
-	app.Session = sesson
-
-	tc, err := render.CreateTempateCache()
 	if err != nil {
-		fmt.Println(fmt.Sprint(err))
-		log.Fatal("Unable to load Template Cahce")
+		log.Fatal(err)
 	}
-	app.TemplateCache = tc
-	app.Usedcache = false
-
-	render.NewTemplates(&app)
-
-	repo := handler.NewRepo(&app)
-
-	handler.NewHandler(repo)
-
 	fmt.Println("Starting application on port ", pontNumber)
 	srv := &http.Server{
 		Addr:    pontNumber,
@@ -54,4 +36,33 @@ func main() {
 	}
 	err = srv.ListenAndServe()
 	log.Fatal(err)
+}
+
+func run() error {
+	//what am I going to put in the session
+	gob.Register(models.Reservation{})
+	//for deply in production set to true
+	app.InProduction = false
+
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
+
+	tc, err := render.CreateTempateCache()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err))
+		log.Fatal("Unable to load Template Cahce")
+		return err
+	}
+	app.TemplateCache = tc
+	app.Usedcache = false
+
+	repo := handler.NewRepo(&app)
+	handler.NewHandler(repo)
+	render.NewTemplates(&app)
+	return nil
 }

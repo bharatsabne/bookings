@@ -102,7 +102,8 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 			Data:  data,
 		})
 	} else {
-		return
+		m.App.Session.Put(r.Context(), "resarvation", reservation)
+		http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 	}
 }
 
@@ -148,5 +149,18 @@ func (m *Repositoy) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repositoy) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+	resarvation, ok := m.App.Session.Get(r.Context(), "resarvation").(models.Reservation)
+	if !ok {
+		log.Println("Cannot get session")
+		m.App.Session.Put(r.Context(), "error", "can't get reservation form session")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	m.App.Session.Remove(r.Context(), "resarvation")
 
+	data := make(map[string]interface{})
+	data["resarvation"] = resarvation
+	render.RenderTemplate(w, r, "Reservation-Summery.page.html", &models.TempateData{
+		Data: data,
+	})
 }
