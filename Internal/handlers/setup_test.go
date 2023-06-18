@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -52,6 +53,11 @@ func getRoutes() http.Handler {
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog := log.New(os.Stdout, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
 
 	tc, err := CreateTestTempateCache()
 	if err != nil {
@@ -68,7 +74,7 @@ func getRoutes() http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(middleware.Recoverer)
 	// mux.Use(WriteToConsole)
-	mux.Use(NoSurf)
+	// mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 	mux.Get("/", Repo.Home)
 	mux.Get("/about", Repo.About)

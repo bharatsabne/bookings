@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
+	helpers "github.com/bharatsabne/bookings/Internal/Helpers"
 	"github.com/bharatsabne/bookings/Internal/config"
 	handler "github.com/bharatsabne/bookings/Internal/handlers"
 	"github.com/bharatsabne/bookings/Internal/models"
@@ -15,11 +17,14 @@ import (
 )
 
 // pontNumber is constant
-const pontNumber = ":8080"
+const pontNumber = ":8081"
 
 var app config.AppConfig
 
 var session *scs.SessionManager
+
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 // main function
 func main() {
@@ -44,6 +49,12 @@ func run() error {
 	//for deply in production set to true
 	app.InProduction = false
 
+	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog = log.New(os.Stdout, "Error\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
+
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -64,5 +75,6 @@ func run() error {
 	repo := handler.NewRepo(&app)
 	handler.NewHandler(repo)
 	render.NewTemplates(&app)
+	helpers.NewHelper(&app)
 	return nil
 }

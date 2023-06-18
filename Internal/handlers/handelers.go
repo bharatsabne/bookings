@@ -4,10 +4,9 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"log"
-	"net"
 	"net/http"
 
+	helpers "github.com/bharatsabne/bookings/Internal/Helpers"
 	"github.com/bharatsabne/bookings/Internal/config"
 	"github.com/bharatsabne/bookings/Internal/forms"
 	"github.com/bharatsabne/bookings/Internal/models"
@@ -34,27 +33,27 @@ func NewHandler(r *Repositoy) {
 }
 
 func (m *Repositoy) Home(w http.ResponseWriter, r *http.Request) {
-	ip, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err != nil {
-		//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+	// ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	// if err != nil {
+	// 	//return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+	// 	fmt.Fprintf(w, "userip: %q is not IP:port", r.RemoteAddr)
+	// }
 
-		fmt.Fprintf(w, "userip: %q is not IP:port", r.RemoteAddr)
-	}
-
-	fmt.Println("IP Address: " + ip)
-	m.App.Session.Put(r.Context(), "remote_ip", ip)
+	// //fmt.Println("IP Address: " + ip)
+	// m.App.Session.Put(r.Context(), "remote_ip", ip)
 	render.RenderTemplate(w, r, "Home.page.html", &models.TempateData{})
 }
 
 // About Page handler
 func (m *Repositoy) About(w http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Hi, There"
-	lol := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = lol
-	render.RenderTemplate(w, r, "About.page.html", &models.TempateData{
-		StringMap: stringMap,
-	})
+	// stringMap := make(map[string]string)
+	// stringMap["test"] = "Hi, There"
+	// lol := m.App.Session.GetString(r.Context(), "remote_ip")
+	// stringMap["remote_ip"] = lol
+	// render.RenderTemplate(w, r, "About.page.html", &models.TempateData{
+	// 	StringMap: stringMap,
+	// })
+	render.RenderTemplate(w, r, "About.page.html", &models.TempateData{})
 }
 
 // Contact
@@ -77,7 +76,8 @@ func (m *Repositoy) Reservation(w http.ResponseWriter, r *http.Request) {
 func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Printf("%s", err.Error())
+		//log.Printf("%s", err.Error())
+		helpers.ServerError(w, err)
 		return
 	}
 	reservation := models.Reservation{
@@ -90,8 +90,8 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 	// form.Has("FirstName", r)
 	form.Required("FirstName", "LastName", "Email")
-	form.MinimumLength("FirstName", 3, r)
-	form.MinimumLength("LastName", 3, r)
+	form.MinimumLength("FirstName", 3)
+	form.MinimumLength("LastName", 3)
 	form.IsEmail("Email")
 
 	if !form.Valid() {
@@ -142,7 +142,9 @@ func (m *Repositoy) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 	}
 	out, err := json.MarshalIndent(rest, "", "     ")
 	if err != nil {
-		log.Println(err)
+		// log.Println(err)
+		helpers.ServerError(w, err)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
@@ -151,7 +153,8 @@ func (m *Repositoy) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 func (m *Repositoy) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	resarvation, ok := m.App.Session.Get(r.Context(), "resarvation").(models.Reservation)
 	if !ok {
-		log.Println("Cannot get session")
+		//log.Println("Cannot get session")
+		m.App.ErrorLog.Println("can not get error from session")
 		m.App.Session.Put(r.Context(), "error", "can't get reservation form session")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
