@@ -1,0 +1,4 @@
+add_foreign_key("reservations","room_id",{"rooms":["Id"]},{
+    "on_delete":"cascade",
+    "on_update":"cascade",
+})

@@ -2,7 +2,7 @@ create_table("users") {
   t.Column("Id","integer",{primary:true})
   t.Column("First_Name", "string", {"default":""})
   t.Column("Last_Name", "string", {"default":""})
-  t.Column("Email", "string", {})
+  t.Column("email", "string", {})
   t.Column("Password", "string", {"size": 60})
   t.Column("Access_Level", "integer", {"default": 1})
 } 
