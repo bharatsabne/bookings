@@ -1,1 +1,1 @@
-drop_index("users","users_Email_idx")
+drop_index("users","users_email_idx")
