@@ -1,8 +1,8 @@
 create_table("Users") {
-  t.Column("Id","integer",{primary:true})
-  t.Column("First_Name", "string", {"default":""})
-  t.Column("Last_Name", "string", {"default":""})
-  t.Column("Email_Id", "string", {})
-  t.Column("Password", "string", {"size": 60})
-  t.Column("Access_Level", "integer", {"default": 1})
+  t.Column("id","integer",{primary:true})
+  t.Column("first_name", "string", {"default":""})
+  t.Column("last_name", "string", {"default":""})
+  t.Column("email_id", "string", {})
+  t.Column("password", "string", {"size": 60})
+  t.Column("access_level", "integer", {"default": 1})
 } 

@@ -1,4 +1,4 @@
 create_table("Rooms") {
-  t.Column("Id","integer",{primary:true})
-  t.Column("Room_Name", "string", {"default":""})
+  t.Column("id","integer",{primary:true})
+  t.Column("room_name", "string", {"default":""})
 } 
