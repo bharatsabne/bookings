@@ -1,6 +1,6 @@
 development:
   dialect: postgres
-  database: bookigs
+  database: bookings
   user: postgres
   password: YourPassword
   host: 127.0.0.1

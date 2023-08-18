@@ -11,6 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	helpers "github.com/bharatsabne/bookings/Internal/Helpers"
 	"github.com/bharatsabne/bookings/Internal/config"
+	driver "github.com/bharatsabne/bookings/Internal/drivers"
 	handler "github.com/bharatsabne/bookings/Internal/handlers"
 	"github.com/bharatsabne/bookings/Internal/models"
 	"github.com/bharatsabne/bookings/Internal/render"
@@ -62,6 +63,10 @@ func run() error {
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
+
+	//connect to database
+	log.Println("Connecting to database")
+	db, err := driver.NewDatabase("host=localhost port=5432 dbname=bookings user=postgres password=Pass@1234")
 
 	tc, err := render.CreateTempateCache()
 	if err != nil {
