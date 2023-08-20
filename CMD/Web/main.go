@@ -30,11 +30,13 @@ var errorLog *log.Logger
 // main function
 func main() {
 
-	err := run()
+	db, err := run()
 
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
+
 	fmt.Println("Starting application on port ", pontNumber)
 	srv := &http.Server{
 		Addr:    pontNumber,
@@ -44,9 +46,12 @@ func main() {
 	log.Fatal(err)
 }
 
-func run() error {
+func run() (*driver.DB, error) {
 	//what am I going to put in the session
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restriction{})
 	//for deply in production set to true
 	app.InProduction = false
 
@@ -66,20 +71,23 @@ func run() error {
 
 	//connect to database
 	log.Println("Connecting to database")
-	db, err := driver.NewDatabase("host=localhost port=5432 dbname=bookings user=postgres password=Pass@1234")
-
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=postgres password=Pass@1234")
+	if err != nil {
+		log.Fatal("Con't connect to database")
+	}
+	log.Printf("Connected to database")
 	tc, err := render.CreateTempateCache()
 	if err != nil {
 		fmt.Println(fmt.Sprint(err))
 		log.Fatal("Unable to load Template Cahce")
-		return err
+		return nil, err
 	}
 	app.TemplateCache = tc
 	app.Usedcache = false
 
-	repo := handler.NewRepo(&app)
+	repo := handler.NewRepo(&app, db)
 	handler.NewHandler(repo)
-	render.NewTemplates(&app)
+	render.NewRederer(&app)
 	helpers.NewHelper(&app)
-	return nil
+	return db, nil
 }

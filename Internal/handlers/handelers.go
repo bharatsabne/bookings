@@ -8,9 +8,12 @@ import (
 
 	helpers "github.com/bharatsabne/bookings/Internal/Helpers"
 	"github.com/bharatsabne/bookings/Internal/config"
+	driver "github.com/bharatsabne/bookings/Internal/drivers"
 	"github.com/bharatsabne/bookings/Internal/forms"
 	"github.com/bharatsabne/bookings/Internal/models"
 	"github.com/bharatsabne/bookings/Internal/render"
+	"github.com/bharatsabne/bookings/Internal/repository"
+	dbrepo "github.com/bharatsabne/bookings/Internal/repository/dbrepository"
 )
 
 // Repo will be used by handlers
@@ -18,12 +21,14 @@ var Repo *Repositoy
 
 type Repositoy struct {
 	App *config.AppConfig
+	DB  repository.Databaserepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repositoy {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repositoy {
 	return &Repositoy{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a),
 	}
 }
 
@@ -41,7 +46,7 @@ func (m *Repositoy) Home(w http.ResponseWriter, r *http.Request) {
 
 	// //fmt.Println("IP Address: " + ip)
 	// m.App.Session.Put(r.Context(), "remote_ip", ip)
-	render.RenderTemplate(w, r, "Home.page.html", &models.TempateData{})
+	render.Template(w, r, "Home.page.html", &models.TempateData{})
 }
 
 // About Page handler
@@ -50,15 +55,15 @@ func (m *Repositoy) About(w http.ResponseWriter, r *http.Request) {
 	// stringMap["test"] = "Hi, There"
 	// lol := m.App.Session.GetString(r.Context(), "remote_ip")
 	// stringMap["remote_ip"] = lol
-	// render.RenderTemplate(w, r, "About.page.html", &models.TempateData{
+	// render.Template(w, r, "About.page.html", &models.TempateData{
 	// 	StringMap: stringMap,
 	// })
-	render.RenderTemplate(w, r, "About.page.html", &models.TempateData{})
+	render.Template(w, r, "About.page.html", &models.TempateData{})
 }
 
 // Contact
 func (m *Repositoy) Contact(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "Contact.page.html", &models.TempateData{})
+	render.Template(w, r, "Contact.page.html", &models.TempateData{})
 }
 
 // Reservation
@@ -66,7 +71,7 @@ func (m *Repositoy) Reservation(w http.ResponseWriter, r *http.Request) {
 	var emptyReservation models.Reservation
 	data := make(map[string]interface{})
 	data["reservation"] = emptyReservation
-	render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{
+	render.Template(w, r, "Make-Reservation.page.html", &models.TempateData{
 		Forms: forms.New(nil),
 		Data:  data,
 	})
@@ -97,7 +102,7 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
-		render.RenderTemplate(w, r, "Make-Reservation.page.html", &models.TempateData{
+		render.Template(w, r, "Make-Reservation.page.html", &models.TempateData{
 			Forms: form,
 			Data:  data,
 		})
@@ -109,17 +114,17 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 // Generals
 func (m *Repositoy) Generals(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "Generals.page.html", &models.TempateData{})
+	render.Template(w, r, "Generals.page.html", &models.TempateData{})
 }
 
 // Marjors
 func (m *Repositoy) Marjors(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "Majors.page.html", &models.TempateData{})
+	render.Template(w, r, "Majors.page.html", &models.TempateData{})
 }
 
 // SearchAvailability
 func (m *Repositoy) SearchAvailability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "Search-Availability.page.html", &models.TempateData{})
+	render.Template(w, r, "Search-Availability.page.html", &models.TempateData{})
 }
 
 // POST SearchAvailability
@@ -163,7 +168,7 @@ func (m *Repositoy) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 
 	data := make(map[string]interface{})
 	data["resarvation"] = resarvation
-	render.RenderTemplate(w, r, "Reservation-Summery.page.html", &models.TempateData{
+	render.Template(w, r, "Reservation-Summery.page.html", &models.TempateData{
 		Data: data,
 	})
 }

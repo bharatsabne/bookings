@@ -1,4 +1,4 @@
-package dbrepository
+package dbrepo
 
 import (
 	"database/sql"

@@ -1,4 +1,5 @@
 package repository
 
-type Databaserepo struct {
+type Databaserepo interface {
+	AllUsers() bool
 }
