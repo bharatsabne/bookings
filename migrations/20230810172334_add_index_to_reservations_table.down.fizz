@@ -1,2 +1,2 @@
-drop_index("Room_Restrictions","Reservations_email_id_idx")
-drop_index("Room_Restrictions","Reservations_last_name_idx")
+drop_index("reservations","reservations_email_id_idx")
+drop_index("reservations","reservations_last_name_idx")

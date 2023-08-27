@@ -2,7 +2,6 @@ package models
 
 import "time"
 
-
 //User is the user modal
 type User struct {
 	Id          int
@@ -54,6 +53,8 @@ type RoomRestriction struct {
 	RoomId        int
 	ReservationId int
 	RestrictionId int
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 	Room          Room
 	Reservation   Reservation
 	Restriction   Restriction

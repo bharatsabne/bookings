@@ -1,14 +1,14 @@
-add_foreign_key("Room_Restrictions","room_id",{"Rooms":["id"]},{
+add_foreign_key("room_restrictions","room_id",{"rooms":["id"]},{
     "on_delete":"cascade",
     "on_update":"cascade",
 })
 
-add_foreign_key("Room_Restrictions","reservation_id",{"Reservations":["id"]},{
+add_foreign_key("room_restrictions","reservation_id",{"reservations":["id"]},{
     "on_delete":"cascade",
     "on_update":"cascade",
 })
 
-add_foreign_key("Room_Restrictions","restriction_id",{"Restrictions":["id"]},{
+add_foreign_key("room_restrictions","restriction_id",{"restrictions":["id"]},{
     "on_delete":"cascade",
     "on_update":"cascade",
 })

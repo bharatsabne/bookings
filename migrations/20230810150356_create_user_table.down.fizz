@@ -1,1 +1,1 @@
-drop_table("Users");
+drop_table("users");

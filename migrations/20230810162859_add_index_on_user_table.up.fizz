@@ -1,1 +1,1 @@
-add_index("Users","email_id",{"unique":true})
+add_index("users","email_id",{"unique":true})

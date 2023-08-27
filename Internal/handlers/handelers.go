@@ -4,7 +4,10 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
+	"time"
 
 	helpers "github.com/bharatsabne/bookings/Internal/Helpers"
 	"github.com/bharatsabne/bookings/Internal/config"
@@ -85,11 +88,35 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, err)
 		return
 	}
+	sd := r.Form.Get("StartDate")
+	ed := r.Form.Get("EndDate")
+
+	//2023-08-22
+	layout := "2006-01-02"
+	startDate, err := time.Parse(layout, sd)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	endDate, err := time.Parse(layout, ed)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	roomId, err := strconv.Atoi(r.Form.Get("room_id"))
+
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("FirstName"),
 		LastName:  r.Form.Get("LastName"),
 		Email:     r.Form.Get("Email"),
 		Phone:     r.Form.Get("Phone"),
+		StartDate: startDate,
+		EndDate:   endDate,
+		RoomId:    roomId,
 	}
 
 	form := forms.New(r.PostForm)
@@ -106,10 +133,28 @@ func (m *Repositoy) PostReservation(w http.ResponseWriter, r *http.Request) {
 			Forms: form,
 			Data:  data,
 		})
-	} else {
-		m.App.Session.Put(r.Context(), "resarvation", reservation)
-		http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
+		return
 	}
+	newReservationId, err := m.DB.InsertReservation(reservation)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	log.Println("newReservationId", newReservationId)
+	restrictions := models.RoomRestriction{
+		StartDate:     startDate,
+		EndDate:       endDate,
+		RoomId:        roomId,
+		ReservationId: newReservationId,
+		RestrictionId: 1,
+	}
+	err = m.DB.InsertRoomRestrictions(restrictions)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	m.App.Session.Put(r.Context(), "resarvation", reservation)
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
 // Generals

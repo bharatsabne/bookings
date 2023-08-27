@@ -36,6 +36,15 @@
                                 value="{{$res.LastName}}" autocomplete="off" required>
                         </div>
                         <div class="col">
+                            <label for="StartDate">Start Date</label>
+                            <input type="date" name="StartDate" id="StartDate" class="form-control">
+                        </div>
+                        <div class="col">
+                            <label for="EndDate">End Date</label>
+                            <input type="date" name="EndDate" id="EndDate" class="form-control">
+                        </div>
+                        <input type="hidden" name="room_id" value="1">
+                        <div class="col">
                             <label for="Email" class="form-label">Email</label>
                             {{with .Forms.Errors.Get "Email"}}
                             <label class="text-danger">{{.}}</label>

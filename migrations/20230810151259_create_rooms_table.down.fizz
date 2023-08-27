@@ -1,1 +1,1 @@
-drop_table("Rooms");
+drop_table("rooms");
