@@ -78,7 +78,7 @@
         {{block "js" .}}
         {{end}}
         <script>
-            let attensation = Prompt();
+            let attention = Prompt();
             // Example starter JavaScript for disabling form submissions if there are invalid fields
             (() =>
             {
@@ -191,15 +191,20 @@
                 const Custom = async function (c)
                 {
                     const {
+                        icon = "",
                         msg = "",
-                        title = ""
+                        title = "",
+                        showConfirmButton = true,
                     } = c;
                     const { value: result } = await Swal.fire({
+                        icon: icon,
                         title: title,
                         html: msg,
                         backdrop: false,
                         focusConfirm: false,
                         showCancelButton: true,
+                        showConfirmButton: showConfirmButton,
+
                         willOpen: () =>
                         {
                             if (c.willOpen !== undefined)

@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </form>`;
-        attensation.Custom({
+        attention.Custom({
             msg: html,
             title: "Choose your Dates",
             willOpen: () =>
@@ -57,6 +57,7 @@
                     format: "yyyy-mm-dd",
                     ShowOnFocus: true,
                     opens: 'left',
+                    minDate: new Date(),
                 });
             },
             didOpen: () =>
@@ -66,12 +67,10 @@
             },
             callback: function (result)
             {
-                console.log("callback called");
-
                 let form = document.getElementById('checkAvalabilityForm');
                 let formData = new FormData(form);
                 formData.append("csrf_token", "{{.CSRFToken}}");
-
+                formData.append("room_id", "1")
                 fetch('/search-availability-json', {
                     method: "post",
                     body: formData,
@@ -79,9 +78,28 @@
                     .then(response => response.json())
                     .then(data =>
                     {
-                        console.log(data);
-                        console.log(data.ok);
-                        console.log(data.message);
+                        if (data.ok)
+                        {
+                            attention.Custom({
+                                icon: 'success',
+                                showConfirmButton: false,
+                                msg: '<p>Room is available!</p>'
+                                    + '<p><a href="/book-room?id='
+                                    + data.room_id
+                                    + '&s='
+                                    + data.start_date
+                                    + '&e='
+                                    + data.end_date
+                                    + '" class="btn btn-primary">'
+                                    + 'Book now!</a></p>',
+                            })
+                        }
+                        else
+                        {
+                            attention.Error({
+                                text: "No availability",
+                            })
+                        }
                     })
             }
         });

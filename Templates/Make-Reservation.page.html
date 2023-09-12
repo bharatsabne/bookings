@@ -4,16 +4,23 @@
 <div class="container local">
     <div class="row">
         <div class="col">
+            {{$res := index .Data "reservation"}}
             <h1>Make Reservation</h1>
             <div class="row">
                 <div class="col">
-                    <strong>Reservation Details</strong>
+                    <strong>Reservation Details</strong><br>
+                    Room: {{$res.Room.RoomName}}<br>
+                    Arrival: {{index .StringMap "start_date"}}<br>
+                    Departure: {{index .StringMap "end_date"}}
                 </div>
             </div>
             <div class="row">
                 {{$res := index .Data "reservation"}}
                 <form action="/make-reservation" method="post" novalidate class="">
                     <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                    <input type="hidden" name="start_date" value='{{index .StringMap "start_date"}}'>
+                    <input type="hidden" name="end_date" value='{{index .StringMap "end_date"}}'>
+                    <input type="hidden" name="room_id" value="{{$res.RoomId}}">
                     <div class="form-row" id="make-reservation">
                         <div class="col">
                             <label for="FirstName" class="form-label">First Name</label>
@@ -35,15 +42,6 @@
                                 id="LastName" name="LastName" aria-describedby="Last Name" placeholder="Last Name"
                                 value="{{$res.LastName}}" autocomplete="off" required>
                         </div>
-                        <div class="col">
-                            <label for="StartDate">Start Date</label>
-                            <input type="date" name="StartDate" id="StartDate" class="form-control">
-                        </div>
-                        <div class="col">
-                            <label for="EndDate">End Date</label>
-                            <input type="date" name="EndDate" id="EndDate" class="form-control">
-                        </div>
-                        <input type="hidden" name="room_id" value="1">
                         <div class="col">
                             <label for="Email" class="form-label">Email</label>
                             {{with .Forms.Errors.Get "Email"}}
